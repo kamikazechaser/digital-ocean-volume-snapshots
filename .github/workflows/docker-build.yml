@@ -33,6 +33,6 @@ jobs:
           push: true
           tags: |
             kamikazechaser/digitaloceansnapshotter:${{ steps.sha_short.outputs.sha_short }}
-            kamiakzechaser/digitaloceansnapshotter:latest
+            kamikazechaser/digitaloceansnapshotter:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
