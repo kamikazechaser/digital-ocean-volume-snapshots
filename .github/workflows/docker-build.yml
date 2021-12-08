@@ -34,7 +34,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            topgg/digitaloceansnapshotter:${{ steps.sha_short.outputs.sha_short }}
-            topgg/digitaloceansnapshotter:latest
+            kamikazechaser/digitaloceansnapshotter:${{ steps.sha_short.outputs.sha_short }}
+            kamiakzechaser/digitaloceansnapshotter:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
