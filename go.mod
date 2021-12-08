@@ -1,4 +1,4 @@
-module github.com/top-gg/DigitalOceanSnapshotter
+module github.com/kamikazechaser/DigitalOceanSnapshotter
 
 go 1.15
 

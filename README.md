@@ -1,4 +1,7 @@
+> Fork Info: Removed Slack Context
+
 # DigitalOcean Snapshotter
+
 [![Docker Pulls](https://img.shields.io/docker/pulls/topgg/digitaloceansnapshotter.svg)](https://hub.docker.com/r/topgg/digitaloceansnapshotter/)
 
 Simple Digital Ocean Volume Backup Service using Snapshots
@@ -44,19 +47,20 @@ spec:
 ```
 
 **Note that this uses the latest image which you shouldn't do in prod, use a tag version or commit hash instead**
+
 ## Built With
 
-* [Godo](https://github.com/digitalocean/godo) - DigitalOcean V2 API client library
-* [Logrus](https://github.com/sirupsen/logrus) - Logging framework used
-* [Slack-Go](https://github.com/slack-go/slack) - Slack API client library
+- [Godo](https://github.com/digitalocean/godo) - DigitalOcean V2 API client library
+- [Logrus](https://github.com/sirupsen/logrus) - Logging framework used
+- [Slack-Go](https://github.com/slack-go/slack) - Slack API client library
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/top-gg/DigitalOceanSnapshotter/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/top-gg/DigitalOceanSnapshotter/tags).
 
 ## Authors
 
-* **DevYukine @ Top.gg** - *Initial work* - [DevYukine](https://github.com/DevYukine)
+- **DevYukine @ Top.gg** - _Initial work_ - [DevYukine](https://github.com/DevYukine)
 
 See also the list of [contributors](https://github.com/top-gg/DigitalOceanSnapshotter/contributors) who participated in this project.
 
