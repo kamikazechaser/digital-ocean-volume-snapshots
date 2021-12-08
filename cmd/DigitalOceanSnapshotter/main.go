@@ -11,14 +11,12 @@ import (
 
 	"github.com/digitalocean/godo"
 	log "github.com/sirupsen/logrus"
-	"github.com/slack-go/slack"
 )
 
 const createdAtFormat = "2006-01-02T15:04:05Z"
 
 type snapshotterContext struct {
-	DoContext    *DigitalOceanContext
-	SlackContext *SlackContext
+	DoContext *DigitalOceanContext
 }
 
 func initLogging() {
@@ -36,19 +34,19 @@ func main() {
 
 	DOToken, present := os.LookupEnv("DO_TOKEN")
 
-	if present == false {
+	if !present {
 		log.Fatal("Missing enviroment variable \"DO_TOKEN\"")
 	}
 
 	volumesEnv, present := os.LookupEnv("DO_VOLUMES")
 
-	if present == false {
+	if !present {
 		log.Fatal("Missing enviroment variable \"DO_VOLUMES\"")
 	}
 
 	snapshotCountEnv, present := os.LookupEnv("DO_SNAPSHOT_COUNT")
 
-	if present == false {
+	if !present {
 		log.Fatal("Missing enviroment variable \"DO_SNAPSHOT_COUNT\"")
 	}
 
@@ -58,29 +56,11 @@ func main() {
 		log.Fatal("Enviroment variable \"DO_SNAPSHOT_COUNT\" is not an integer")
 	}
 
-	slackEnv := os.Getenv("SLACK_TOKEN")
-
-	var slackContext *SlackContext = nil
-
-	if slackEnv != "" {
-		channelID, present := os.LookupEnv("SLACK_CHANNEL_ID")
-
-		if present == false {
-			log.Fatal("Missing enviroment variable \"SLACK_CHANNEL_ID\"")
-		}
-
-		slackContext = &SlackContext{
-			client:    slack.New(slackEnv),
-			channelID: channelID,
-		}
-	}
-
 	ctx := snapshotterContext{
 		DoContext: &DigitalOceanContext{
 			client: godo.NewFromToken(DOToken),
 			ctx:    context.TODO(),
 		},
-		SlackContext: slackContext,
 	}
 
 	volumeIDs := strings.Split(volumesEnv, ",")
@@ -95,6 +75,7 @@ func main() {
 			VolumeID: volume.ID,
 			Name:     time.Now().Format("2006-01-02T15:04:05"),
 		})
+
 		if err != nil {
 			handleError(ctx, err, true)
 		}
@@ -102,6 +83,10 @@ func main() {
 		log.Info(fmt.Sprintf("Created Snapshot with Id %s from volume %s", snapshot.ID, volume.Name))
 
 		snapshots, _, err := ctx.DoContext.ListSnapshots(volume.ID, nil)
+
+		if err != nil {
+			handleError(ctx, err, true)
+		}
 
 		snapshotLength := len(snapshots)
 
@@ -135,23 +120,10 @@ func main() {
 		}
 	}
 
-	if ctx.SlackContext != nil {
-		err = ctx.SlackContext.SendEvent(fmt.Sprintf("Successfully created Backup for %d Volumes", len(volumeIDs)), log.InfoLevel)
-		if err != nil {
-			handleError(ctx, err, false)
-		}
-	}
 }
 
 func handleError(ctx snapshotterContext, err error, fatal bool) {
 	errString := err.Error()
-
-	if ctx.SlackContext != nil {
-		err = ctx.SlackContext.SendEvent(errString, log.ErrorLevel)
-		if err != nil {
-			log.Error(fmt.Sprintf("Error while trying to send error to Slack: %s", err.Error()))
-		}
-	}
 
 	if fatal {
 		log.Fatal(errString)
