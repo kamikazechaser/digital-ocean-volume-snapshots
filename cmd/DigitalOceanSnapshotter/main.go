@@ -21,7 +21,7 @@ type snapshotterContext struct {
 
 func initLogging() {
 	log.SetFormatter(&log.TextFormatter{
-		DisableLevelTruncation: true,
+		DisableLevelTruncation: false,
 	})
 
 	log.SetOutput(os.Stdout)
